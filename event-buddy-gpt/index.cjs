@@ -11,7 +11,12 @@ app.use(express.json());
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 app.post("/generate", async (req, res) => {
-  const { name, title, skills, achievements } = req.body;
+  // Extract nested user and event info from frontend payload
+  const { event, user } = req.body;
+  const name = user?.name || "";
+  const title = user?.role || "";
+  const skills = Array.isArray(user?.skills) ? user.skills.join(", ") : user?.skills || "";
+  const achievements = Array.isArray(user?.goals) ? user.goals.join(", ") : user?.goals || "";
 
   const prompt = `Generate a short professional intro for ${name}, a ${title}, skilled in ${skills}, who achieved: ${achievements}`;
 
